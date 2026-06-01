@@ -1,0 +1,41 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors / IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Python (helper scripts inside skills/*/scripts/)
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+.env
+.envrc
+
+# Build / dist
+build/
+dist/
+*.egg-info/
+
+# Logs
+*.log
+
+# Test artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local agent skill installs (in case someone tests inside the repo)
+.claude/
+.cursor/
+.codex/
+
+# Local scratch / throwaway probe scripts — never commit
+_scratch/
