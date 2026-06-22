@@ -4,7 +4,7 @@
 
 `jetson-device-skills` is a catalog of [Agent Skills](https://agentskills.io/) for working with a live NVIDIA Jetson device after it has booted. The skills are intended to be present on the Jetson and provide agent-readable instructions plus small helper scripts for diagnostics, memory auditing, runtime selection, model serving, benchmarking, packaging guidance, and related Jetson device workflows.
 
-This repository is device-side. Skills here run on the Jetson, inspect the Jetson, or provide commands that an agent should execute on the Jetson. BSP customization before flashing belongs in the sibling [jetson-bsp-skills](https://github.com/NVIDIA-AI-IOT/jetson-bsp-skills) repository.
+This repository is device-side. Skills here run on the Jetson, inspect the Jetson, or provide commands that an agent should execute on the Jetson. BSP customization before flashing belongs in the sibling [`jetson-bsp-skills`](https://github.com/NVIDIA-AI-IOT/jetson-bsp-skills) repository.
 
 This project is currently not accepting contributions.
 

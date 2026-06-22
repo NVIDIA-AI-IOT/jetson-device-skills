@@ -55,13 +55,32 @@ done
 
 [[ -z "${MODEL}" ]] && { echo "ERROR: --model is required" >&2; usage; exit 2; }
 
+l4t_major() {
+  local raw="${JETSON_L4T_VERSION:-}"
+  raw="${raw#r}"
+  raw="${raw#R}"
+  local major="${raw%%.*}"
+  [[ "${major}" =~ ^[0-9]+$ ]] && printf '%s\n' "${major}" || printf '0\n'
+}
+
+orin_uses_upstream_vllm() {
+  [[ "${JETSON_GENERATION:-}" = "orin" && "$(l4t_major)" -ge 39 ]]
+}
+
 if [[ "${FORCE_NATIVE}" -eq 1 ]]; then
   BENCH_MODE="native"
   CONTAINER=""
 elif [[ -z "${CONTAINER}" ]]; then
   case "${JETSON_GENERATION:-}" in
     thor) CONTAINER="vllm/vllm-openai:latest"; BENCH_MODE="container";;  # Thor requires upstream vLLM 0.20+.
-    orin) CONTAINER="ghcr.io/nvidia-ai-iot/vllm:latest-jetson-orin"; BENCH_MODE="container";;
+    orin)
+      if orin_uses_upstream_vllm; then
+        CONTAINER="vllm/vllm-openai:latest"
+      else
+        CONTAINER="ghcr.io/nvidia-ai-iot/vllm:latest-jetson-orin"
+      fi
+      BENCH_MODE="container"
+      ;;
     *) echo "ERROR: cannot pick benchmark mode for generation '${JETSON_GENERATION:-unknown}' (sku '${JETSON_SKU:-unknown}')" >&2; exit 3;;
   esac
 else

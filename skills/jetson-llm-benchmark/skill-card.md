@@ -7,9 +7,9 @@ This skill is ready for commercial/non-commercial use. <br>
 NVIDIA <br>
 
 ### License/Terms of Use: <br>
-Apache-2.0 <br>
+CC-BY-4.0 AND Apache 2.0 <br>
 ## Use Case: <br>
-Developers and engineers benchmarking LLM/VLM serving performance on NVIDIA Jetson devices to compare models, runtimes, power modes, and tuning configurations. <br>
+Developers and engineers measuring deployed LLM latency and throughput on NVIDIA Jetson devices to compare models, runtime flags, power modes, and before/after tuning changes. <br>
 
 ### Deployment Geography for Use: <br>
 Global <br>
@@ -24,10 +24,19 @@ Mitigation: Review and scan skill before deployment. <br>
 
 
 ## Skill Output: <br>
-**Output Type(s):** [Shell commands, JSON] <br>
-**Output Format:** [Structured JSON benchmark results] <br>
+**Output Type(s):** [JSON, Shell commands] <br>
+**Output Format:** [Structured JSON object on stdout] <br>
 **Output Parameters:** [1D] <br>
 **Other Properties Related to Output:** [None] <br>
+
+## Evaluation Agents Used: <br>
+- `claude-code` <br>
+- `codex` <br>
+
+
+
+## Evaluation Tasks: <br>
+Evaluated against 8 evaluation tasks in the astra-sandbox environment using the NVSkills-Eval external profile. <br>
 
 ## Evaluation Metrics Used: <br>
 Reported benchmark dimensions: <br>
@@ -37,7 +46,25 @@ Reported benchmark dimensions: <br>
 - Effectiveness: Checks whether the agent performs measurably better with the skill than without it. <br>
 - Efficiency: Checks whether the agent uses fewer tokens and avoids redundant work. <br>
 
+Underlying evaluation signals used in this run: <br>
+- `security`: Checks for unsafe operations, secret leakage, and unauthorized access. <br>
+- `skill_execution`: Verifies that the agent loaded the expected skill and workflow. <br>
+- `skill_efficiency`: Checks routing quality, decoy avoidance, and redundant tool usage. <br>
+- `accuracy`: Grades final-answer correctness against the reference answer. <br>
+- `goal_accuracy`: Checks whether the overall user task completed successfully. <br>
+- `behavior_check`: Verifies expected behavior steps, including safety expectations. <br>
+- `token_efficiency`: Compares token usage with and without the skill. <br>
 
+
+
+## Evaluation Results: <br>
+| Dimension | Num | `claude-code` | `codex` |
+|---|---:|---:|---:|
+| Security | 4 | 100% (+0%) | 75% (-12%) |
+| Correctness | 4 | 76% (+43%) | 91% (+53%) |
+| Discoverability | 4 | 73% (+44%) | 80% (+48%) |
+| Effectiveness | 4 | 52% (+26%) | 68% (+45%) |
+| Efficiency | 4 | 70% (+35%) | 72% (+38%) |
 
 ## Skill Version(s): <br>
 0.0.2 (source: frontmatter) <br>

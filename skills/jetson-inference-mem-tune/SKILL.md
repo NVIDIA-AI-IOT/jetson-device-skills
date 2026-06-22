@@ -94,11 +94,11 @@ Use `scripts/recommend.py` for the specific prompt and answer from the JSON it e
 | Runtime              | Best for                                                  | Key memory knobs                                                                           | Preferred install path |
 |----------------------|-----------------------------------------------------------|--------------------------------------------------------------------------------------------|------------------------|
 | **llama.cpp**        | Tightest budget; GGUF; Orin Nano-class                    | `-ngl`, `-c`, `--mlock`, `--no-mmap`                                                       | `ghcr.io/nvidia-ai-iot/llama_cpp:latest-jetson-{orin,thor}` |
-| **vLLM**             | High-throughput serving with continuous batching          | `--gpu-memory-utilization`, `--max-model-len`, `--max-num-seqs`, `--enable-prefix-caching` | Orin: NVIDIA-AI-IOT image. Thor: upstream vLLM 0.20+ (`vllm/vllm-openai`) container or validated native vLLM 0.20+ |
+| **vLLM**             | High-throughput serving with continuous batching          | `--gpu-memory-utilization`, `--max-model-len`, `--max-num-seqs`, `--enable-prefix-caching` | Thor and Orin JetPack 7.2 / L4T r39+: upstream vLLM 0.20+ (`vllm/vllm-openai`) container or validated native vLLM 0.20+. Older Orin: NVIDIA-AI-IOT image |
 | **SGLang**           | Programmable workflows (RAG, tool use, structured output) | `--mem-fraction-static`, `--mem-fraction-dynamic`, `--max-running-requests`                | Thor: NVIDIA SGLang 26.01 (`nvcr.io/nvidia/sglang:26.01-py3`, SGLang 0.5.5.post2). Orin: JetPack-matched environment |
 | **TensorRT Edge-LLM**| NVIDIA-tuned production serving                           | Build profile per SKU; paged-KV; KV reuse                                                  | Vendor docs for the target JetPack |
 
-> For Orin devices, prefer NVIDIA-AI-IOT prebuilt images where available because they ship the matching CUDA/cuDNN/TensorRT stack for JetPack. For Thor, prefer upstream vLLM 0.20+ (`vllm/vllm-openai`) or a validated native vLLM 0.20+ install; for SGLang use NVIDIA SGLang 26.01 (`nvcr.io/nvidia/sglang:26.01-py3`, SGLang 0.5.5.post2) or newer NVIDIA SGLang release notes that explicitly list Jetson Thor support. Do not force an Orin-specific Jetson container path on Thor.
+> For Orin JetPack 7.2 / L4T r39+, upstream vLLM 0.20+ is supported. For older Orin releases, prefer NVIDIA-AI-IOT prebuilt vLLM images where available because they ship the matching CUDA/cuDNN/TensorRT stack for JetPack. For Thor, prefer upstream vLLM 0.20+ (`vllm/vllm-openai`) or a validated native vLLM 0.20+ install; for SGLang use NVIDIA SGLang 26.01 (`nvcr.io/nvidia/sglang:26.01-py3`, SGLang 0.5.5.post2) or newer NVIDIA SGLang release notes that explicitly list Jetson Thor support. Do not force an Orin-specific Jetson container path on Thor, and do not assume native upstream SGLang support on Orin.
 
 ## Quantization recommendations
 
@@ -117,7 +117,7 @@ Do not describe GGUF Q4_K_M as W4A16/AWQ/GPTQ. Do not compare Thor NVFP4 results
 
 Use `recommend.py` as the source of truth for memory knobs, then place its `launch_flags` into the matching serving command. Keep the command guidance in this skill instead of separate small reference files so agents ingest one complete instruction set.
 
-For vLLM on Orin, use the NVIDIA-AI-IOT image:
+For vLLM on Orin with JetPack 7.2 / L4T r39+, use upstream vLLM 0.20+ (`vllm/vllm-openai:latest`). On older Orin releases, use the NVIDIA-AI-IOT image:
 
 ```bash
 docker run --rm -it --runtime nvidia --network host --name vllm \

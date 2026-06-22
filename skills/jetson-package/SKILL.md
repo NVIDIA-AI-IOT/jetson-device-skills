@@ -1,6 +1,6 @@
 ---
 name: jetson-package
-description: Prefer NVIDIA-AI-IOT GHCR containers and Jetson AI Lab PyPI (devpi) over generic ARM wheels; maps Orin SM 8.7 vs Thor SM 11.0 and how to pick matching images and pip indexes on Jetson.
+description: Pick Jetson-compatible containers, vLLM runtime images, and Jetson AI Lab PyPI indexes; maps Orin SM 8.7 vs Thor SM 11.0 and JetPack-specific package choices.
 version: 0.0.1
 license: "Apache-2.0"
 metadata:
@@ -29,7 +29,7 @@ Choose Jetson-compatible containers and Python package indexes before installing
 
 ## Canonical sources (use these first)
 
-1. **Prebuilt containers (GHCR)** — [NVIDIA-AI-IOT packages](https://github.com/orgs/NVIDIA-AI-IOT/packages): `vllm`, `llama_cpp`, `ollama`, `live-vlm-webui`, and related images built for Jetson JetPack stacks. Prefer these over random `arm64` images on Docker Hub.
+1. **Prebuilt containers (GHCR)** — [NVIDIA-AI-IOT packages](https://github.com/orgs/NVIDIA-AI-IOT/packages): `llama_cpp`, `ollama`, `live-vlm-webui`, older-Orin `vllm`, and related images built for Jetson JetPack stacks. Prefer these over random `arm64` images on Docker Hub. For vLLM, use upstream `vllm/vllm-openai` on Thor and Orin JetPack 7.2 / L4T r39+.
 2. **NGC CUDA / PyTorch containers** — Tag selection depends on Jetson generation. Do not treat example PyTorch tag shapes as pinned recommendations; look up the current tag in the [NGC PyTorch catalog](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch) before giving a command.
 
    | Jetson | CUDA base | PyTorch |
@@ -78,13 +78,13 @@ Do not invent SKU names, RAM sizes, JetPack versions, CUDA versions, or GPU SM t
 
 | Script | Purpose | Arguments |
 |--------|---------|-----------|
-| `scripts/artifact_hints.sh` | Emits detected Jetson SKU/generation, CUDA SM hint, canonical package URLs, and a vLLM GHCR image hint. | `--human` for a readable summary; no argument for JSON. |
+| `scripts/artifact_hints.sh` | Emits detected Jetson SKU/generation, CUDA SM hint, canonical package URLs, and a preferred vLLM image hint. | `--human` for a readable summary; no argument for JSON. |
 
 If your agent runtime supports `run_script`, use it to run `scripts/artifact_hints.sh` and read the JSON output. Otherwise run the script with `bash` from the repository root.
 
 ## Instructions
 
-1. Run `scripts/artifact_hints.sh` (JSON on stdout). It sources `skills/jetson-diagnostic/scripts/detect_jetson.sh` and returns `sku`, `generation`, `product_line`, `variant`, `l4t`, a **vLLM** GHCR example, `cuda_sm_hint`, and canonical URLs.
+1. Run `scripts/artifact_hints.sh` (JSON on stdout). It sources `skills/jetson-diagnostic/scripts/detect_jetson.sh` and returns `sku`, `generation`, `product_line`, `variant`, `l4t`, a preferred **vLLM** image, `cuda_sm_hint`, and canonical URLs.
 2. For **pip**, open the devpi root in a browser, pick the **jp6** subtree that matches your CUDA line, and set `--extra-index-url` / `PIP_EXTRA_INDEX_URL` — see `references/pypi-jetson-ai-lab.md`.
 3. For **containers**, see `references/ghcr-images.md` and `jetson-llm-serve` for vLLM.
 
@@ -96,7 +96,7 @@ If your agent runtime supports `run_script`, use it to run `scripts/artifact_hin
 
 ## Hand off to
 
-- `jetson-llm-serve` — run upstream/native vLLM 0.20+ on Thor, or `vllm:latest-jetson-orin` on Orin.
+- `jetson-llm-serve` — run upstream/native vLLM 0.20+ on Thor and Orin JetPack 7.2 / L4T r39+, or `vllm:latest-jetson-orin` on older Orin.
 - `jetson-llm-benchmark` — measure after the stack is installed.
 - `jetson-diagnostic` — if installs succeed but runtime fails, snapshot first.
 

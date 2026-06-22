@@ -1,6 +1,6 @@
 ---
 name: jetson-llm-serve
-description: Stand up vLLM or SGLang serving on Jetson, using upstream containers on Thor and NVIDIA-AI-IOT containers on Orin.
+description: Stand up vLLM or SGLang serving on Jetson, using upstream vLLM on Thor and Orin JetPack 7.2+, and NVIDIA-AI-IOT vLLM on older Orin.
 version: 0.0.1
 license: "Apache-2.0"
 metadata:
@@ -12,7 +12,7 @@ metadata:
 
 # Jetson LLM Serve
 
-Encodes the [Jetson AI Lab GenAI tutorial](https://www.jetson-ai-lab.com/tutorials/genai-on-jetson-llms-vlms/): on Orin, pick the NVIDIA-AI-IOT prebuilt container; on Thor, use upstream vLLM 0.20+ (`vllm/vllm-openai:latest`) or validated native vLLM 0.20+, and use NVIDIA SGLang 26.01 (`nvcr.io/nvidia/sglang:26.01-py3`, SGLang 0.5.5.post2) when SGLang is requested. Set MAXN, make Hugging Face credentials/cache available, and launch an OpenAI-compatible server. Works for both LLMs and VLMs.
+Encodes the [Jetson AI Lab GenAI tutorial](https://www.jetson-ai-lab.com/tutorials/genai-on-jetson-llms-vlms/): on Orin JetPack 7.2 / L4T r39+, use upstream vLLM 0.20+ (`vllm/vllm-openai:latest`); on older Orin, pick the NVIDIA-AI-IOT prebuilt vLLM container; on Thor, use upstream vLLM 0.20+ or validated native vLLM 0.20+, and use NVIDIA SGLang 26.01 (`nvcr.io/nvidia/sglang:26.01-py3`, SGLang 0.5.5.post2) when SGLang is requested. Set MAXN, make Hugging Face credentials/cache available, and launch an OpenAI-compatible server. Works for both LLMs and VLMs.
 
 ## Purpose
 
@@ -40,7 +40,7 @@ device or execute the deployment.
 For recipe questions, provide a complete launch recipe instead of trying to call
 `jetson-llm-serve` as a tool. A complete answer includes:
 
-- The Jetson-appropriate runtime path: upstream vLLM 0.20+ (`vllm/vllm-openai:latest`) or NVIDIA SGLang 26.01 (`nvcr.io/nvidia/sglang:26.01-py3`, SGLang 0.5.5.post2) on Thor, or NVIDIA-AI-IOT vLLM container on Orin.
+- The Jetson-appropriate runtime path: upstream vLLM 0.20+ (`vllm/vllm-openai:latest`) or NVIDIA SGLang 26.01 (`nvcr.io/nvidia/sglang:26.01-py3`, SGLang 0.5.5.post2) on Thor, NVIDIA-AI-IOT vLLM container on older Orin, or upstream vLLM 0.20+ on Orin JetPack 7.2 / L4T r39+.
 - The model checkpoint / Hugging Face repo the user named.
 - A `docker run` + server command sketch with `--host 0.0.0.0 --port 8000`.
 - The OpenAI-compatible endpoint: `http://<jetson-ip>:8000/v1`.
@@ -52,12 +52,12 @@ Jetson container when answering VLM prompts.
 
 ## Step 1 — Pick the runtime path (per Jetson family)
 
-Use upstream vLLM 0.20+ on Thor (`vllm/vllm-openai:latest`, or a validated native vLLM 0.20+ install). Use NVIDIA SGLang 26.01 (`nvcr.io/nvidia/sglang:26.01-py3`, SGLang 0.5.5.post2) on Thor when the user asks for SGLang, RAG, tool-use, or programmable serving. Use the **NVIDIA-AI-IOT prebuilt vLLM image** ([packages](https://github.com/orgs/NVIDIA-AI-IOT/packages)) on Orin because it ships the correct CUDA / cuDNN / TensorRT stack for the JetPack on the device.
+Use upstream vLLM 0.20+ on Thor (`vllm/vllm-openai:latest`, or a validated native vLLM 0.20+ install). On Orin JetPack 7.2 / L4T r39+, use upstream vLLM 0.20+ (`vllm/vllm-openai:latest`). On older Orin releases, use the **NVIDIA-AI-IOT prebuilt vLLM image** ([packages](https://github.com/orgs/NVIDIA-AI-IOT/packages)) because it ships the correct CUDA / cuDNN / TensorRT stack for that JetPack. Use NVIDIA SGLang 26.01 (`nvcr.io/nvidia/sglang:26.01-py3`, SGLang 0.5.5.post2) on Thor when the user asks for SGLang, RAG, tool-use, or programmable serving; do not recommend native upstream SGLang on Orin unless a JetPack-matched release explicitly supports it.
 
 | Jetson family               | Runtime path                                      |
 |-----------------------------|---------------------------------------------------|
 | Thor (T5000, T4000)         | upstream vLLM 0.20+ (`vllm/vllm-openai:latest`) or NVIDIA SGLang 26.01 (`nvcr.io/nvidia/sglang:26.01-py3`, SGLang 0.5.5.post2) |
-| AGX Orin / Orin NX / Nano   | `ghcr.io/nvidia-ai-iot/vllm:latest-jetson-orin`   |
+| AGX Orin / Orin NX / Nano   | Orin JetPack 7.2 / L4T r39+: upstream vLLM 0.20+ (`vllm/vllm-openai:latest`); older Orin: `ghcr.io/nvidia-ai-iot/vllm:latest-jetson-orin` |
 
 To detect the silicon era for image tags:
 
@@ -94,7 +94,7 @@ docker run --rm -it --runtime nvidia --network host --ipc host --name vllm \
     --tensor-parallel-size 1
 ```
 
-On Orin, use the NVIDIA-AI-IOT container:
+On Orin JetPack 7.2 / L4T r39+, use upstream vLLM 0.20+ (`vllm/vllm-openai:latest`). On older Orin releases, use the NVIDIA-AI-IOT container:
 
 ```bash
 docker run --rm -it --runtime nvidia --network host --name vllm \
