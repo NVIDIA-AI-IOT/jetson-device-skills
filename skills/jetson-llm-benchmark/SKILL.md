@@ -93,8 +93,9 @@ scripts/bench_vllm.sh \
 ```
 
 Uses the Jetson-appropriate benchmark client path: upstream vLLM 0.20+ container
-`vllm/vllm-openai:latest` on Thor, or the NVIDIA-AI-IOT vLLM benchmark
-container `ghcr.io/nvidia-ai-iot/vllm:latest-jetson-orin` on Orin. Pass
+`vllm/vllm-openai:latest` on Thor and Orin JetPack 7.2 / L4T r39+,
+or the NVIDIA-AI-IOT vLLM benchmark container
+`ghcr.io/nvidia-ai-iot/vllm:latest-jetson-orin` on older Orin. Pass
 `--native` only when host-native vLLM is already installed and validated. It
 runs against `http://localhost:8000/v1`. **Always do a warmup pass first** (~10
 prompts, discarded) before the measured run — Jetson has cold caches and JIT'd
@@ -237,8 +238,8 @@ LLMs already know what TTFT/ITL/throughput mean. Jetson-specific things they usu
 - Container image tags may be mutable unless the caller passes a digest-pinned
   image through `--container`. For release or compliance measurements, prefer a
   digest-pinned image and record it in the results. The default vLLM benchmark
-  client image is upstream vLLM 0.20+ via `vllm/vllm-openai:latest` on Thor and NVIDIA-AI-IOT
-  `ghcr.io/nvidia-ai-iot/vllm:latest-jetson-orin` on Orin.
+  client image is upstream vLLM 0.20+ via `vllm/vllm-openai:latest` on Thor and Orin JetPack 7.2 / L4T r39+,
+  and NVIDIA-AI-IOT `ghcr.io/nvidia-ai-iot/vllm:latest-jetson-orin` on older Orin.
 - Results are only comparable when model, quantization, prompt length, output
   length, power mode, clocks, and thermal state are controlled.
 

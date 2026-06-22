@@ -66,7 +66,7 @@ Draft-model (fallback — pair a small same-family model):
 ### Jetson-specific tuning rules
 
 - `num_speculative_tokens`: start at **5** on Thor, **3** on AGX Orin. Higher values pay off only if the draft acceptance rate is >0.6.
-- Always pair with the same vLLM runtime path used by `jetson-llm-serve`: upstream vLLM 0.20+ (`vllm/vllm-openai:latest`) or validated native vLLM 0.20+ on Thor, or the NVIDIA-AI-IOT vLLM image on Orin. Do not use an Orin NVIDIA-AI-IOT vLLM image on Thor. Older runtimes may lack EAGLE-3 or the current `--speculative-config` shape.
+- Always pair with the same vLLM runtime path used by `jetson-llm-serve`: upstream vLLM 0.20+ (`vllm/vllm-openai:latest`) or validated native vLLM 0.20+ on Thor, upstream vLLM 0.20+ on Orin JetPack 7.2 / L4T r39+, or the NVIDIA-AI-IOT vLLM image on older Orin. Do not use an Orin NVIDIA-AI-IOT vLLM image on Thor. Older runtimes may lack EAGLE-3 or the current `--speculative-config` shape.
 - Drop `--gpu-memory-utilization` by ~0.05 vs the non-speculative baseline to give the draft model headroom.
 
 ## How to verify it actually helped
@@ -84,7 +84,7 @@ Draft-model (fallback — pair a small same-family model):
 
 ## Error handling
 
-- If vLLM rejects `--speculative-config`, verify that Thor is using vLLM 0.20+ and that Orin is using a JetPack-matched NVIDIA-AI-IOT vLLM image; then switch back to the non-speculative serving command if the runtime still rejects it.
+- If vLLM rejects `--speculative-config`, verify that Thor and Orin JetPack 7.2 / L4T r39+ are using vLLM 0.20+ and that older Orin is using a JetPack-matched NVIDIA-AI-IOT vLLM image; then switch back to the non-speculative serving command if the runtime still rejects it.
 - If startup OOMs, lower `--gpu-memory-utilization`, use a smaller draft, or disable speculation and hand off to `jetson-inference-mem-tune`.
 - If benchmark throughput regresses, remove `--speculative-config`; a bad draft path is worse than no speculation.
 

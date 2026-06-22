@@ -1,28 +1,30 @@
-<!-- SPDX-License-Identifier: Apache-2.0 AND CC-BY-4.0 -->
-<!-- Copyright (c) 2026 NVIDIA Corporation. All rights reserved. -->
+# Security Policy
 
-## Security
+## Reporting a Vulnerability
 
-NVIDIA is dedicated to the security and trust of our software products and services, including all source code repositories managed through our organization.
+NVIDIA takes the security of its products and services seriously, including all source code repositories under the [NVIDIA-AI-IOT](https://github.com/NVIDIA-AI-IOT) organization.
 
-If you need to report a security issue, please use the appropriate contact points outlined below. **Please do not report security vulnerabilities through GitHub.** If a potential security issue is inadvertently reported via a public issue or pull request, NVIDIA maintainers may limit public discussion and redirect the reporter to the appropriate private disclosure channels.
+If you believe you have found a security vulnerability in any skill in this catalog, please **do not** report it through public GitHub issues, discussions, or pull requests.
 
-## Reporting Potential Security Vulnerability in an NVIDIA Product
+Instead, report it through the NVIDIA PSIRT process:
 
-To report a potential security vulnerability in any NVIDIA product:
+- Web form: <https://www.nvidia.com/en-us/security/psirt-policies/>
+- Email: <psirt@nvidia.com>
 
-- Web: [Security Vulnerability Submission Form](https://www.nvidia.com/object/submit-security-vulnerability.html)
-- E-Mail: psirt@nvidia.com
-  - We encourage you to use the following PGP key for secure email communication: [NVIDIA public PGP Key for communication](https://www.nvidia.com/en-us/security/pgp-key)
-  - Please include the following information:
-    - Product/Driver name and version/branch that contains the vulnerability
-  - Type of vulnerability (code execution, denial of service, buffer overflow, etc.)
-    - Instructions to reproduce the vulnerability
-    - Proof-of-concept or exploit code
-    - Potential impact of the vulnerability, including how an attacker could exploit the vulnerability
+Please include enough information to reproduce the issue:
 
-While NVIDIA currently does not have a bug bounty program, we do offer acknowledgement when an externally reported security issue is addressed under our coordinated vulnerability disclosure policy. Please visit our [Product Security Incident Response Team (PSIRT)](https://www.nvidia.com/en-us/security/psirt-policies/) policies page for more information.
+- The skill name and the file(s) involved
+- The Jetson SKU and L4T version
+- The agent and version
+- A clear description of the vulnerability and reproduction steps
+- The potential impact
 
-## NVIDIA Product Security
+## Scope
 
-For all security-related concerns, please visit NVIDIA's Product Security portal at https://www.nvidia.com/en-us/security
+This policy covers the contents of this repository: skill instructions (`SKILL.md`), helper scripts in each skill's `scripts/` directory, and reference material under `references/`.
+
+Vulnerabilities in upstream components (Jetson Linux, CUDA, vLLM, llama.cpp, Ollama, the agents themselves) should be reported to those projects directly.
+
+## Disclosure Policy
+
+NVIDIA follows a coordinated disclosure model. We will work with you to validate, fix, and disclose the issue responsibly.

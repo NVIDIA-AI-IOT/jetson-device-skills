@@ -7,9 +7,9 @@ This skill is ready for commercial/non-commercial use. <br>
 NVIDIA <br>
 
 ### License/Terms of Use: <br>
-Apache-2.0 <br>
+CC-BY-4.0 AND Apache 2.0 <br>
 ## Use Case: <br>
-Developers and engineers tuning Jetson vLLM deployments for faster token generation by enabling speculative decoding when per-token latency is the bottleneck. <br>
+Developers and engineers tuning Jetson vLLM deployments for faster token generation by enabling speculative decoding when per-token output latency is the bottleneck. <br>
 
 ### Deployment Geography for Use: <br>
 Global <br>
@@ -19,7 +19,8 @@ Risk: Review before execution as proposals could introduce incorrect or misleadi
 Mitigation: Review and scan skill before deployment. <br>
 
 ## Reference(s): <br>
-- [Jetson AI Lab — GenAI on Jetson LLMs/VLMs Tutorial](https://www.jetson-ai-lab.com/tutorials/genai-on-jetson-llms-vlms/) <br>
+- [Jetson AI Lab GenAI Tutorial](https://www.jetson-ai-lab.com/tutorials/genai-on-jetson-llms-vlms/) <br>
+- [Agent Skills](https://agentskills.io/) <br>
 
 
 ## Skill Output: <br>
@@ -28,8 +29,14 @@ Mitigation: Review and scan skill before deployment. <br>
 **Output Parameters:** [1D] <br>
 **Other Properties Related to Output:** [None] <br>
 
+## Evaluation Agents Used: <br>
+- claude-code <br>
+- codex <br>
+
+
+
 ## Evaluation Tasks: <br>
-NVSkills-Eval 3-Tier evaluation (external profile): Tier 1 static validation (9 checks, 5 findings), Tier 2 deduplication (2 checks, 0 findings). Tier 3 live agent evaluation not available in this report. <br>
+Evaluated against 8 evaluation tasks in the astra-sandbox environment using the NVSkills-Eval external profile. <br>
 
 ## Evaluation Metrics Used: <br>
 Reported benchmark dimensions: <br>
@@ -39,7 +46,25 @@ Reported benchmark dimensions: <br>
 - Effectiveness: Checks whether the agent performs measurably better with the skill than without it. <br>
 - Efficiency: Checks whether the agent uses fewer tokens and avoids redundant work. <br>
 
+Underlying evaluation signals used in this run: <br>
+- `security`: Checks for unsafe operations, secret leakage, and unauthorized access. <br>
+- `skill_execution`: Verifies that the agent loaded the expected skill and workflow. <br>
+- `skill_efficiency`: Checks routing quality, decoy avoidance, and redundant tool usage. <br>
+- `accuracy`: Grades final-answer correctness against the reference answer. <br>
+- `goal_accuracy`: Checks whether the overall user task completed successfully. <br>
+- `behavior_check`: Verifies expected behavior steps, including safety expectations. <br>
+- `token_efficiency`: Compares token usage with and without the skill. <br>
 
+
+
+## Evaluation Results: <br>
+| Dimension | Num | `claude-code` | `codex` |
+|---|---:|---:|---:|
+| Security | 4 | 100% (+0%) | 100% (+0%) |
+| Correctness | 4 | 100% (+50%) | 95% (+28%) |
+| Discoverability | 4 | 100% (+75%) | 84% (+31%) |
+| Effectiveness | 4 | 94% (+40%) | 88% (+41%) |
+| Efficiency | 4 | 94% (+50%) | 79% (+27%) |
 
 ## Skill Version(s): <br>
 0.0.1 (source: frontmatter) <br>

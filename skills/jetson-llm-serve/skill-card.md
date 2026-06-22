@@ -1,5 +1,5 @@
 ## Description: <br>
-Stand up vLLM or SGLang serving on Jetson, using upstream containers on Thor and NVIDIA-AI-IOT containers on Orin. <br>
+Stand up vLLM or SGLang serving on Jetson, using upstream vLLM on Thor and Orin JetPack 7.2+, and NVIDIA-AI-IOT vLLM on older Orin. <br>
 
 This skill is ready for commercial/non-commercial use. <br>
 
@@ -9,7 +9,7 @@ NVIDIA <br>
 ### License/Terms of Use: <br>
 Apache-2.0 <br>
 ## Use Case: <br>
-Developers and engineers deploying LLM or VLM inference serving on NVIDIA Jetson devices, selecting the correct runtime path (vLLM or SGLang) and container image for their Jetson generation. <br>
+Developers and engineers deploying LLM or VLM inference servers on NVIDIA Jetson devices for edge AI applications. <br>
 
 ### Deployment Geography for Use: <br>
 Global <br>
@@ -21,7 +21,6 @@ Mitigation: Review and scan skill before deployment. <br>
 ## Reference(s): <br>
 - [Jetson AI Lab — Introduction to GenAI on Jetson: How to Run LLMs and VLMs](https://www.jetson-ai-lab.com/tutorials/genai-on-jetson-llms-vlms/) <br>
 - [NVIDIA-AI-IOT GHCR Packages](https://github.com/orgs/NVIDIA-AI-IOT/packages) <br>
-- [Agent Skills Registry](https://agentskills.io/) <br>
 
 
 ## Skill Output: <br>
@@ -29,6 +28,15 @@ Mitigation: Review and scan skill before deployment. <br>
 **Output Format:** [Markdown with inline bash code blocks] <br>
 **Output Parameters:** [1D] <br>
 **Other Properties Related to Output:** [None] <br>
+
+## Evaluation Agents Used: <br>
+- `claude-code` <br>
+- `codex` <br>
+
+
+
+## Evaluation Tasks: <br>
+Evaluated against 8 evaluation tasks in the astra-sandbox environment using the external NVSkills-Eval profile. <br>
 
 ## Evaluation Metrics Used: <br>
 Reported benchmark dimensions: <br>
@@ -38,7 +46,25 @@ Reported benchmark dimensions: <br>
 - Effectiveness: Checks whether the agent performs measurably better with the skill than without it. <br>
 - Efficiency: Checks whether the agent uses fewer tokens and avoids redundant work. <br>
 
+Underlying evaluation signals used in this run: <br>
+- `security`: Checks for unsafe operations, secret leakage, and unauthorized access. <br>
+- `skill_execution`: Verifies that the agent loaded the expected skill and workflow. <br>
+- `skill_efficiency`: Checks routing quality, decoy avoidance, and redundant tool usage. <br>
+- `accuracy`: Grades final-answer correctness against the reference answer. <br>
+- `goal_accuracy`: Checks whether the overall user task completed successfully. <br>
+- `behavior_check`: Verifies expected behavior steps, including safety expectations. <br>
+- `token_efficiency`: Compares token usage with and without the skill. <br>
 
+
+
+## Evaluation Results: <br>
+| Dimension | Num | `claude-code` | `codex` |
+|---|---:|---:|---:|
+| Security | 4 | 75% (+0%) | 88% (+12%) |
+| Correctness | 4 | 84% (+57%) | 91% (+35%) |
+| Discoverability | 4 | 86% (+76%) | 60% (+25%) |
+| Effectiveness | 4 | 81% (+43%) | 87% (+47%) |
+| Efficiency | 4 | 83% (+50%) | 50% (+16%) |
 
 ## Skill Version(s): <br>
 0.0.1 (source: frontmatter) <br>

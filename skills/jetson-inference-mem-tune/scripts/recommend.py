@@ -203,7 +203,14 @@ def quantization_notes(runtime: str, sku: str) -> list[str]:
     return notes
 
 
-def runtime_path_notes(runtime: str, sku: str) -> list[str]:
+def l4t_major(l4t: str) -> int:
+    try:
+        return int(str(l4t).split(".", maxsplit=1)[0])
+    except (TypeError, ValueError):
+        return 0
+
+
+def runtime_path_notes(runtime: str, sku: str, l4t: str) -> list[str]:
     if sku == "thor" and runtime == "vllm":
         return [
             "Thor vLLM path: use upstream vLLM 0.20+ via vllm/vllm-openai or a "
@@ -211,21 +218,30 @@ def runtime_path_notes(runtime: str, sku: str) -> list[str]:
             "Thor test. Do not use the Orin GHCR image."
         ]
     if (sku == "orin" or sku.startswith("orin-")) and runtime == "vllm":
-        return ["Orin vLLM path: prefer ghcr.io/nvidia-ai-iot/vllm:latest-jetson-orin."]
+        if l4t_major(l4t) >= 39:
+            return [
+                "Orin JetPack 7.2 / L4T r39+ vLLM path: use upstream "
+                "vLLM 0.20+ via vllm/vllm-openai."
+            ]
+        return [
+            "Orin vLLM path before JetPack 7.2 / L4T r39: prefer "
+            "ghcr.io/nvidia-ai-iot/vllm:latest-jetson-orin."
+        ]
     if sku == "thor" and runtime == "sglang":
         return [
-            "Thor SGLang path: use NVIDIA SGLang 26.01 (nvcr.io/nvidia/sglang:26.01-py3), "
-            "which includes SGLang 0.5.5.post2 and lists Jetson Thor support. "
-            "Do not judge Thor support from older prerelease SGLang results."
+            "Thor SGLang path: use NVIDIA SGLang 26.01 "
+            "(nvcr.io/nvidia/sglang:26.01-py3), which includes SGLang "
+            "0.5.5.post2 and lists Jetson Thor support. Do not judge Thor "
+            "support from older prerelease SGLang results."
         ]
     return []
 
 
-def build_notes(args: argparse.Namespace, runtime: str, sku: str) -> list[str]:
+def build_notes(args: argparse.Namespace, runtime: str, sku: str, l4t: str) -> list[str]:
     notes = quantization_notes(runtime, sku)
     if args.target_mb and runtime == "vllm":
         notes.append(f"--gpu-memory-utilization scaled to leave ~{args.target_mb} MB free.")
-    notes.extend(runtime_path_notes(runtime, sku))
+    notes.extend(runtime_path_notes(runtime, sku, l4t))
     return notes
 
 
@@ -250,6 +266,7 @@ def main() -> int:
     try:
         sku = normalize_sku(audit)
         variant = str(audit.get("variant", "unknown"))
+        l4t = str(audit.get("l4t_version", "unknown"))
         mem_total_gb = audit_int(audit, "mem_total_gb")
     except ValueError as e:
         print(f"ERROR: malformed audit JSON: {e}", file=sys.stderr)
@@ -259,11 +276,12 @@ def main() -> int:
     runtime, rationale = resolve_runtime(args, sku, mem_total_gb)
     flags = build_flags(runtime, defaults, args.target_mb, mem_total_gb)
     alternatives = build_alternatives(defaults, runtime, args.target_mb, mem_total_gb)
-    notes = build_notes(args, runtime, sku)
+    notes = build_notes(args, runtime, sku, l4t)
 
     out = {
         "sku": sku,
         "variant": variant,
+        "l4t_version": l4t,
         "mem_total_gb": mem_total_gb,
         "runtime": runtime,
         "rationale": rationale,

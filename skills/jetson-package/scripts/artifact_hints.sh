@@ -4,7 +4,7 @@
 #
 # artifact_hints.sh
 #
-# Emits JSON hints for NVIDIA-AI-IOT GHCR images and Jetson AI Lab PyPI.
+# Emits JSON hints for Jetson-compatible vLLM images and Jetson AI Lab PyPI.
 # Sources the canonical Jetson detector.
 #
 # Usage:
@@ -27,14 +27,29 @@ if [ "${1:-}" = "--human" ]; then
     HUMAN=1
 fi
 
+l4t_major() {
+    raw="${JETSON_L4T_VERSION:-}"
+    raw="${raw#r}"
+    raw="${raw#R}"
+    major="${raw%%.*}"
+    case "$major" in
+        ''|*[!0-9]*) echo 0 ;;
+        *) echo "$major" ;;
+    esac
+}
+
 case "${JETSON_GENERATION:-}" in
     thor)
         cuda_sm="11.0"
-        vllm_suffix="thor"
+        vllm_image="vllm/vllm-openai:latest"
         ;;
     orin)
         cuda_sm="8.7"
-        vllm_suffix="orin"
+        if [ "$(l4t_major)" -ge 39 ]; then
+            vllm_image="vllm/vllm-openai:latest"
+        else
+            vllm_image="ghcr.io/nvidia-ai-iot/vllm:latest-jetson-orin"
+        fi
         ;;
     *)
         echo "ERROR: unknown or unset JETSON_GENERATION='${JETSON_GENERATION:-}'" >&2
@@ -43,13 +58,11 @@ case "${JETSON_GENERATION:-}" in
         ;;
 esac
 
-vllm_image="ghcr.io/nvidia-ai-iot/vllm:latest-jetson-${vllm_suffix}"
-
 if [ "$HUMAN" -eq 1 ]; then
     printf 'generation=%s product_line=%s sku=%s variant=%s L4T=%s\n' \
         "$JETSON_GENERATION" "$JETSON_PRODUCT_LINE" "$JETSON_SKU" "$JETSON_VARIANT" "$JETSON_L4T_VERSION"
     printf 'CUDA SM hint=%s (Orin 8.7, Thor 11.0)\n' "$cuda_sm"
-    printf 'Example vLLM image: %s\n' "$vllm_image"
+    printf 'Preferred vLLM image: %s\n' "$vllm_image"
     printf 'GHCR org packages: https://github.com/orgs/NVIDIA-AI-IOT/packages\n'
     printf 'Jetson AI Lab PyPI: https://pypi.jetson-ai-lab.io/\n'
     exit 0
@@ -76,7 +89,7 @@ doc = {
     "ghcr_org_packages_url": "https://github.com/orgs/NVIDIA-AI-IOT/packages",
     "jetson_ai_lab_pypi_url": "https://pypi.jetson-ai-lab.io/",
     "notes": [
-        "Prefer GHCR images under NVIDIA-AI-IOT and devpi indexes under pypi.jetson-ai-lab.io over generic aarch64 artifacts.",
+        "For vLLM, use upstream vllm/vllm-openai on Thor and Orin L4T r39+; use NVIDIA-AI-IOT GHCR on older Orin.",
         "Orin GPUs use SM 8.7; Thor uses SM 11.0 - many third-party wheels omit these targets.",
         "Thor T5000 vs T4000: variant_source explains inference; nv_boot_control (TNSPEC/COMPATIBLE_SPEC) is used when present; else EEPROM/flash board ID is the hardware ground truth.",
     ],
