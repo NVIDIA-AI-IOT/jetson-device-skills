@@ -18,6 +18,11 @@ This project is currently not accepting contributions.
 - `jetson-llm-benchmark` emits structured benchmark metrics for vLLM, llama.cpp, and `Ollama` paths.
 - `jetson-package` guides Jetson-specific package, wheel, and container choices.
 - `jetson-speculative-decoding` adds Jetson-specific EAGLE-3 or draft-model speculative decoding guidance for vLLM.
+- `jetson-video-setup` installs and independently verifies the native NVIDIA Video Codec SDK and PyNvVideoCodec surfaces.
+- `jetson-video-capability` reconciles live NVENC/NVDEC queries and operations with documented product support.
+- `jetson-video-recipe` converts codec use cases into validated, media-free native and PyNvVideoCodec configuration plans.
+- `jetson-video-benchmark` measures official-sample encode and decode performance on the live target.
+- `jetson-video-pipeline` executes and verifies official-sample codec stages and their artifact handoffs.
 
 ## Installation
 
@@ -80,7 +85,12 @@ jetson-device-skills/
     ├── jetson-llm-serve/
     ├── jetson-memory-audit/
     ├── jetson-package/
-    └── jetson-speculative-decoding/
+    ├── jetson-speculative-decoding/
+    ├── jetson-video-benchmark/
+    ├── jetson-video-capability/
+    ├── jetson-video-pipeline/
+    ├── jetson-video-recipe/
+    └── jetson-video-setup/
 ```
 
 ## License
