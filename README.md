@@ -1,28 +1,20 @@
-# jetson-device-skills
+# NVIDIA Jetson Device Skills
 
-## Description
+NVIDIA Jetson Device Skills is a catalog of agent skills for working with a live NVIDIA Jetson device after it has booted. You can also discover these skills through the [NVIDIA Agent Skills catalog](https://github.com/NVIDIA/skills), alongside skills for other NVIDIA products.
 
-`jetson-device-skills` is a catalog of [Agent Skills](https://agentskills.io/) for working with a live NVIDIA Jetson device after it has booted. The skills are intended to be present on the Jetson and provide agent-readable instructions plus small helper scripts for diagnostics, memory auditing, runtime selection, model serving, benchmarking, packaging guidance, and related Jetson device workflows.
+The skills provide agent-readable instructions and helper scripts for diagnostics, memory optimization, package selection, LLM serving, and inference and video benchmarking. Use them with Claude Code, Codex, Cursor, or other compatible coding agents to carry out workflows grounded in your live device’s configuration.
 
-This repository is device-side. Skills here run on the Jetson, inspect the Jetson, or provide commands that an agent should execute on the Jetson. BSP customization before flashing belongs in the sibling [`jetson-bsp-skills`](https://github.com/NVIDIA-AI-IOT/jetson-bsp-skills) repository.
+For host-side BSP customization and flashing workflows, see [Jetson BSP Skills](https://github.com/NVIDIA-AI-IOT/jetson-bsp-skills).
+
+## Start Here
+
+New to AI-assisted development on Jetson?
+
+- **[Hands-on walkthrough: AI-assisted development on Jetson](https://www.jetson-ai-lab.com/tutorials/ai-assisted-development-on-jetson/)** — Follow a guided workflow from device preparation to a live VLM demo using a coding agent.
+- **[Jetson Agent Skills guide](https://www.jetson-ai-lab.com/tutorials/jetson-agent-skills/)** — Learn how skills work, choose between Device and BSP Skills, and explore installation options.
+- **[NVIDIA Agent Skills catalog](https://github.com/NVIDIA/skills)** — Discover Jetson skills alongside skills for other NVIDIA products.
 
 This project is currently not accepting contributions.
-
-## Included Skills
-
-- `jetson-diagnostic` captures a read-only device health snapshot, including Jetson identity, memory, GPU, thermal, power, storage, services, and top processes.
-- `jetson-memory-audit` measures DRAM/NvMap usage and verifies before/after memory reclamation with live audit data.
-- `jetson-headless-mode` helps turn a Jetson into a headless edge node by disabling the desktop and safe background services.
-- `jetson-inference-mem-tune` recommends serving runtimes and memory flags for vLLM, SGLang, llama.cpp, and TensorRT Edge-LLM.
-- `jetson-llm-serve` provides Jetson-appropriate vLLM and SGLang serving recipes.
-- `jetson-llm-benchmark` emits structured benchmark metrics for vLLM, llama.cpp, and `Ollama` paths.
-- `jetson-package` guides Jetson-specific package, wheel, and container choices.
-- `jetson-speculative-decoding` adds Jetson-specific EAGLE-3 or draft-model speculative decoding guidance for vLLM.
-- `jetson-video-setup` installs and independently verifies the native NVIDIA Video Codec SDK and PyNvVideoCodec surfaces.
-- `jetson-video-capability` reconciles live NVENC/NVDEC queries and operations with documented product support.
-- `jetson-video-recipe` converts codec use cases into validated, media-free native and PyNvVideoCodec configuration plans.
-- `jetson-video-benchmark` measures official-sample encode and decode performance on the live target.
-- `jetson-video-pipeline` executes and verifies official-sample codec stages and their artifact handoffs.
 
 ## Installation
 
@@ -63,6 +55,24 @@ For NemoClaw/OpenClaw sandboxes:
 
 Restart the agent session after installation so the new skill entries are picked up. If your agent expects a different skill directory, copy or sync the `skills/` directory into that location. Keep each skill as a complete directory containing its `SKILL.md`, `scripts/`, and `references/` content.
 
+## Included Skills
+
+| Skill | What it helps you do |
+|---|---|
+| [jetson-diagnostic](skills/jetson-diagnostic/SKILL.md) | Inspect device identity, memory, GPU activity, thermals, power, storage, and services. |
+| [jetson-memory-audit](skills/jetson-memory-audit/SKILL.md) | Measure memory usage and verify the effect of memory reclamation. |
+| [jetson-headless-mode](skills/jetson-headless-mode/SKILL.md) | Configure a headless Jetson by managing desktop and background services. |
+| [jetson-inference-mem-tune](skills/jetson-inference-mem-tune/SKILL.md) | Choose inference runtimes and memory settings for the device. |
+| [jetson-llm-serve](skills/jetson-llm-serve/SKILL.md) | Configure Jetson-appropriate LLM serving workflows. |
+| [jetson-llm-benchmark](skills/jetson-llm-benchmark/SKILL.md) | Measure LLM inference performance with structured benchmark results. |
+| [jetson-package](skills/jetson-package/SKILL.md) | Select Jetson-compatible packages, wheels, and containers. |
+| [jetson-speculative-decoding](skills/jetson-speculative-decoding/SKILL.md) | Explore Jetson-specific speculative decoding configurations. |
+| [jetson-video-setup](skills/jetson-video-setup/SKILL.md) | Install and verify native Video Codec SDK and PyNvVideoCodec components. |
+| [jetson-video-capability](skills/jetson-video-capability/SKILL.md) | Check live encode/decode capabilities against documented device support. |
+| [jetson-video-recipe](skills/jetson-video-recipe/SKILL.md) | Translate video codec requirements into validated configuration plans. |
+| [jetson-video-benchmark](skills/jetson-video-benchmark/SKILL.md) | Measure encode and decode performance on the device. |
+| [jetson-video-pipeline](skills/jetson-video-pipeline/SKILL.md) | Execute and verify video codec pipeline stages. |
+
 ## Usage
 
 Each skill lives under `skills/<skill-name>/` and starts with a `SKILL.md` file. After `install.sh` links or copies the skills into the agent's skill directory, agent runtimes such as Cursor, Claude Code, Codex, or NemoClaw/OpenClaw can discover the skills from their frontmatter descriptions and follow the instructions in the selected skill.
@@ -92,6 +102,13 @@ jetson-device-skills/
     ├── jetson-video-recipe/
     └── jetson-video-setup/
 ```
+
+## Related Resources
+
+- [Jetson AI Lab](https://www.jetson-ai-lab.com/) — Models, tutorials, and applications for generative AI on Jetson.
+- [NVIDIA Agent Skills](https://github.com/NVIDIA/skills) — The central NVIDIA skills catalog.
+- [Jetson BSP Skills](https://github.com/NVIDIA-AI-IOT/jetson-bsp-skills) — Skills for host-side BSP customization and flashing workflows.
+- [Report an issue](https://github.com/NVIDIA-AI-IOT/jetson-device-skills/issues) — Report a bug or documentation problem. For security issues, follow [SECURITY.md](SECURITY.md).
 
 ## License
 
